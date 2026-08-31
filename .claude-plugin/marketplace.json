@@ -1,0 +1,20 @@
+{
+  "name": "hono",
+  "owner": {
+    "name": "Hono",
+    "email": "yusuke@kamawada.com"
+  },
+  "metadata": {
+    "description": "Agent Skills for the Hono web framework",
+    "version": "0.0.1"
+  },
+  "plugins": [
+    {
+      "name": "hono",
+      "description": "Efficiently develop Hono applications with inline API reference and request testing.",
+      "source": "./",
+      "strict": true,
+      "skills": ["./skills/hono"]
+    }
+  ]
+}
