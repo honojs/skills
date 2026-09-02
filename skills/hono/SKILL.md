@@ -1,11 +1,11 @@
 ---
 name: hono
-description: Use when building Hono web applications or when the user asks about Hono APIs, routing, middleware, JSX, validation, testing, or streaming. TRIGGER when code imports from 'hono' or 'hono/*', or user mentions Hono. Use `npx hono request` to test endpoints.
+description: Use when building Hono web applications or when the user asks about Hono APIs, routing, middleware, JSX, validation, testing, or streaming. TRIGGER when code imports from 'hono' or 'hono/*', or user mentions Hono. Use Hono CLI to inspect and test the app.
 ---
 
 # Hono Skill
 
-Build Hono web applications. This skill provides inline API knowledge for AI. Use `npx hono request` to test endpoints.
+Build Hono web applications. This skill provides inline API knowledge for AI. Use Hono CLI to inspect and test the app.
 
 ## Latest Documentation
 
@@ -15,26 +15,24 @@ For details beyond this inline reference, fetch the latest documentation from ht
 curl -H "Accept: text/markdown" https://hono.dev/docs/helpers/cookie
 ```
 
-## Hono CLI Usage
+## Hono CLI
 
-### Request Testing
+Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. Install it in the project, then let the CLI explain itself:
 
-Test endpoints without starting an HTTP server. Uses `app.request()` internally.
-
-```bash
-# GET request
-npx hono request [file] -P /path
-
-# POST request with JSON body
-npx hono request [file] -X POST -P /api/users -d '{"name": "test"}'
-```
-
-**Note:** Do not pass credentials directly in CLI arguments. Use environment variables for sensitive values. `hono request` does not support Cloudflare Workers bindings (KV, D1, R2, etc.). When bindings are required, use `workers-fetch` instead:
+<!-- TODO at the 0.2 release: change @hono/cli@next to @hono/cli -->
 
 ```bash
-npx workers-fetch /path
-npx workers-fetch -X POST -H "Content-Type:application/json" -d '{"name":"test"}' /api/users
+npm install -D @hono/cli@next
+npx hono agent-context
 ```
+
+Follow the output. It explains every command (`routes`, `request`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
+
+Notes:
+
+- `hono request` sends a request with `app.request()` — no server needed. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
+- For Cloudflare Workers bindings (KV, D1, R2, etc.), use `hono request -P /path --runtime workerd`. It starts the app with the wrangler config of the project, so the local bindings (`c.env`) are real. wrangler must be installed in the project.
+- For multi-request flows that keep state across requests, use a persistent `wrangler dev` instead.
 
 ---
 
