@@ -17,24 +17,10 @@ curl -H "Accept: text/markdown" https://hono.dev/docs/helpers/cookie
 
 ## Hono CLI
 
-Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. Install it in the project, then let the CLI explain itself:
+If [`@hono/cli`](https://github.com/honojs/cli) is in the project's `package.json`, use it to inspect and test the app: run `npx hono agent-context` once and follow it. It explains every command, the JSON output contract, and the workflow. Do not add `@hono/cli` to a project yourself — that is the user's decision.
 
-<!-- TODO at the 0.2 release: change @hono/cli@next to @hono/cli -->
-
-```bash
-npm install -D @hono/cli@next
-npx hono agent-context
-```
-
-Follow the output. It explains every command (`routes`, `request`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
-
-Notes:
-
-- `hono request` sends a request with `app.request()` — no server needed. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
-- `npx hono request -P /users` does the same check as a hand-written `app.request()` test script, with no file to clean up. It also works where plain Node cannot run the app: JSX, enums, path aliases.
-- To try code that is not in a file yet, pipe it: `echo 'app.get("/hi", (c) => c.text("hi"))' | npx hono request - -P /hi`.
-- For Cloudflare Workers bindings (KV, D1, R2, etc.), use `hono request -P /path --runtime workerd`. It starts the app with the wrangler config of the project, so the local bindings (`c.env`) are real. wrangler must be installed in the project.
-- For multi-request flows that keep state across requests, use a persistent `wrangler dev` instead.
+- `npx hono request -P /users` does the same check as a hand-written `app.request()` test script — no file to clean up, and it works where plain Node cannot run the app (JSX, enums, path aliases).
+- For Cloudflare Workers bindings (KV, D1, R2, etc.), `npx hono request -P /path --runtime workerd` runs the app with the wrangler config of the project, so `c.env` is real.
 
 ---
 
