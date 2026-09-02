@@ -31,6 +31,8 @@ Follow the output. It explains every command (`routes`, `request`, `benchmark`, 
 Notes:
 
 - `hono request` sends a request with `app.request()` — no server needed. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
+- Do not write a throwaway `app.request()` test script to verify your changes. `npx hono request -P /users` is the same check with no file left behind, and it also works where plain Node cannot (JSX, enums, path aliases).
+- To try code that is not in a file yet, pipe it: `echo 'app.get("/hi", (c) => c.text("hi"))' | npx hono request - -P /hi`.
 - For Cloudflare Workers bindings (KV, D1, R2, etc.), use `hono request -P /path --runtime workerd`. It starts the app with the wrangler config of the project, so the local bindings (`c.env`) are real. wrangler must be installed in the project.
 - For multi-request flows that keep state across requests, use a persistent `wrangler dev` instead.
 
