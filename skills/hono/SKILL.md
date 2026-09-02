@@ -17,18 +17,19 @@ curl -H "Accept: text/markdown" https://hono.dev/docs/helpers/cookie
 
 ## Hono CLI
 
-Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. No install needed — `npx` fetches it and the project stays untouched. Run it once and follow it:
+Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. Install it, run it once, and follow it:
 
 <!-- TODO at the 0.2 release: change @hono/cli@next to @hono/cli -->
 
 ```bash
-npx -y @hono/cli@next agent-context
+npm i -D @hono/cli@next
+npx hono agent-context
 ```
 
-It explains every command, the JSON output contract, and the workflow. If the project will keep using it, add it: `npm i -D @hono/cli@next`.
+It explains every command, the JSON output contract, and the workflow. To use it without installing, `npx -y @hono/cli@next` works too.
 
-- `npx @hono/cli@next request -P /users` does the same check as a hand-written `app.request()` test script — no file to clean up, and it works where plain Node cannot run the app (JSX, enums, path aliases).
-- For Cloudflare Workers bindings (KV, D1, R2, etc.), `npx @hono/cli@next request -P /path --runtime workerd` runs the app with the wrangler config of the project, so `c.env` is real.
+- `npx hono request -P /users` does the same check as a hand-written `app.request()` test script — no file to clean up, and it works where plain Node cannot run the app (JSX, enums, path aliases).
+- For Cloudflare Workers bindings (KV, D1, R2, etc.), `npx hono request -P /path --runtime workerd` runs the app with the wrangler config of the project, so `c.env` is real.
 
 ---
 
