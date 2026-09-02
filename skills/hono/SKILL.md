@@ -25,7 +25,7 @@ Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. No in
 npx -y @hono/cli@next agent-context
 ```
 
-It explains every command, the JSON output contract, and the workflow. Add `@hono/cli` as a devDependency only if the user wants to keep it.
+It explains every command, the JSON output contract, and the workflow. If the project will keep using it, add it: `npm i -D @hono/cli@next`.
 
 - `npx @hono/cli@next request -P /users` does the same check as a hand-written `app.request()` test script — no file to clean up, and it works where plain Node cannot run the app (JSX, enums, path aliases).
 - For Cloudflare Workers bindings (KV, D1, R2, etc.), `npx @hono/cli@next request -P /path --runtime workerd` runs the app with the wrangler config of the project, so `c.env` is real.
