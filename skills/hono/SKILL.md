@@ -26,7 +26,7 @@ npm install -D @hono/cli@next
 npx hono agent-context
 ```
 
-Follow the output. It explains every command (`routes`, `request`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
+Follow the output. It explains every command (`routes`, `request`, `batch`, `snapshot`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
 
 Notes:
 
@@ -40,6 +40,8 @@ Notes:
   {"path":"/users/{{id}}","expect":{"status":200,"body":{"name":"Alice"}}}
   EOF
   ```
+
+- Before changing existing routes, capture the current behavior: `npx hono snapshot` prints it as batch JSONL lines (real responses become the `expect`). Keep the lines, make the change, then rerun them with `npx hono batch -` until `"failed": 0`.
 
 ---
 
