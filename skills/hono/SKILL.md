@@ -42,6 +42,7 @@ Notes:
   ```
 
 - Before changing existing routes, capture the current behavior: `npx hono snapshot` prints it as batch JSONL lines (real responses become the `expect`). Keep the lines, make the change, then rerun them with `npx hono batch -` until `"failed": 0`.
+- On a large API, use `npx hono snapshot --status-only` and `npx hono batch - --compact` — same loop, much smaller output. A failed step carries `diff`: fix what it names.
 
 ---
 
