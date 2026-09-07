@@ -26,20 +26,22 @@ npm install -D @hono/cli@next
 npx hono agent-context
 ```
 
-Follow the output. It explains every command (`routes`, `request`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
+Follow the output. It explains every command (`routes`, `request`, `batch`, `snapshot`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
 
 Notes:
 
 - `hono request` sends a request with `app.request()` — no server needed. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
 - For Cloudflare Workers bindings (KV, D1, R2, etc.), use `hono request /path --runtime workerd`. It starts the app with the wrangler config of the project, so the local bindings (`c.env`) are real. wrangler must be installed in the project.
-- For several requests, or a flow that keeps state (POST, then use the returned id), use one `hono request --batch -` call. One JSON object per line; `save` a value and use it as `{{id}}` in later steps. The steps share one app instance:
+- For several requests, or a flow that keeps state (POST, then use the returned id), run them in one `hono batch -` call. One JSON object per line; `save` a value and use it as `{{id}}` in later steps. The steps share one app instance. Declare the expected status/body per step with `expect` (body is a deep partial match) and iterate until the summary shows `"failed": 0`:
 
   ```bash
-  npx hono request --batch - <<'EOF'
-  {"method":"POST","path":"/users","body":{"name":"Alice"},"save":{"id":".id"}}
-  {"path":"/users/{{id}}"}
+  npx hono batch - <<'EOF'
+  {"method":"POST","path":"/users","body":{"name":"Alice"},"save":{"id":".id"},"expect":{"status":201}}
+  {"path":"/users/{{id}}","expect":{"status":200,"body":{"name":"Alice"}}}
   EOF
   ```
+
+- Before changing existing routes, capture the current behavior: `npx hono snapshot` prints it as batch JSONL lines (real responses become the `expect`). Keep the lines, make the change, then rerun them with `npx hono batch -` until `"failed": 0`.
 
 ---
 
