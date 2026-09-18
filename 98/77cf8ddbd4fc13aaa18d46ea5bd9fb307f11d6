@@ -1,0 +1,19 @@
+skills/hono/SKILL.md
+  s_0a897492bf032a::t_68ab1dbe6289ac 60,176-183,185-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "9877cf8ddbd4fc13aaa18d46ea5bd9fb307f11d6",
+  "prompts": {},
+  "sessions": {
+    "s_0a897492bf032a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebd73177-a13f-4639-bdf6-2148be87c15b",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}
