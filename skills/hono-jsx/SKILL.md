@@ -32,7 +32,7 @@ vite.config.ts
 wrangler.jsonc
 ```
 
-```json
+```jsonc
 // package.json (scripts)
 {
   "dev": "vite",
