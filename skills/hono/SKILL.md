@@ -358,6 +358,8 @@ app.post('/users', sValidator('json', schema), (c) => {
 
 ## JSX
 
+To build UI with it (layouts with `jsxRenderer`, Vite, client-side code), use the `hono-jsx` skill. This section covers the syntax only.
+
 ### Setup
 
 In `tsconfig.json`:
