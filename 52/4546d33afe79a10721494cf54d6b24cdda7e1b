@@ -1,0 +1,25 @@
+.claude-plugin/marketplace.json
+  s_0a897492bf032a::t_694c6b129f3e10 14,17
+README.md
+  s_0a897492bf032a::t_d5a3b339778741 3,34-43
+skills/hono-jsx/SKILL.md
+  s_0a897492bf032a::t_0c9452c2ddd1e2 1-302
+skills/hono/SKILL.md
+  s_0a897492bf032a::t_7c6b34d9322595 361-362
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "524546d33afe79a10721494cf54d6b24cdda7e1b",
+  "prompts": {},
+  "sessions": {
+    "s_0a897492bf032a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ebd73177-a13f-4639-bdf6-2148be87c15b",
+        "model": "claude-fable-5-1"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}
