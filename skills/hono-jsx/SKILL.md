@@ -179,10 +179,11 @@ Validate with `validator('form', ...)` or a schema validator from the `hono` ski
 
 Most pages need no client JavaScript. When a part does, start with plain DOM code and reach for `hono/jsx/dom` only for UI that holds state and re-renders. Neither involves React.
 
-**Plain script** — the default. Put it in `src/client.ts`, load it from the renderer with `<Script src="/src/client.ts" />`, and add `"DOM"` to `lib` in `tsconfig.json` (the template ships with `["ESNext"]` only).
+**Plain script** — the default. Put it in `src/client.ts` and load it from the renderer with `<Script src="/src/client.ts" />`.
 
 ```ts
 // src/client.ts
+/// <reference lib="dom" />
 document.querySelector('#menu-toggle')?.addEventListener('click', () => {
   document.querySelector('#menu')?.classList.toggle('open')
 })
@@ -192,6 +193,7 @@ document.querySelector('#menu-toggle')?.addEventListener('click', () => {
 
 ```tsx
 // src/client.tsx
+/// <reference lib="dom" />
 import { useState } from 'hono/jsx'
 import { render } from 'hono/jsx/dom'
 
@@ -204,6 +206,14 @@ render(<Counter />, document.getElementById('counter')!)
 ```
 
 Hooks (`useState`, `useEffect`, `useRef`, ...) have React-compatible signatures and are imported from `hono/jsx`. Calling the server from the client is a `fetch` to a JSON route; `hc` from `hono/client` adds typed calls once there is an API surface worth typing.
+
+**Type-checking client files.** The template's `tsconfig.json` has `lib: ["ESNext"]` and no `DOM`, so `document` fails `tsc`. Put a lib reference at the top of each client file instead of editing `tsconfig.json`:
+
+```ts
+/// <reference lib="dom" />
+```
+
+Vite does not read `lib`, so this only matters for `tsc`.
 
 ## Styling
 
