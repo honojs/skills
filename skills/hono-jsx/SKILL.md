@@ -19,7 +19,7 @@ Build UI with `hono/jsx`: server-rendered HTML first, a small amount of client-s
 
 ## Project Layout (Cloudflare Workers + Vite)
 
-This is what `create-hono` generates with the `cloudflare-workers+vite` template. Match it in existing projects instead of inventing a different structure.
+This is what `create-hono` generates with the `cloudflare-workers+vite` template. Match it in existing projects instead of inventing a different structure. Verify routes with the Hono CLI from the `hono` skill (`npx hono request /`); it is a dev dependency of the template and gives `c.env` the local bindings automatically.
 
 ```
 src/
