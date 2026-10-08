@@ -17,21 +17,21 @@ curl -H "Accept: text/markdown" https://hono.dev/docs/helpers/cookie
 
 ## Hono CLI
 
-Use [Hono CLI](https://github.com/honojs/cli) to inspect and test the app. Install it in the project, then let the CLI explain itself:
+Verify with [Hono CLI](https://github.com/honojs/cli), not with throwaway scripts or a dev server. It is a dev dependency (projects from `create-hono` already have it), loads the app in-process with `app.request()`, and prints JSON. Install it if missing, then read its help:
 
-<!-- TODO at the 0.2 release: change @hono/cli@next to @hono/cli -->
+<!-- TODO at the 1.0 release: change @hono/cli@next to @hono/cli -->
 
 ```bash
 npm install -D @hono/cli@next
-npx hono agent-context
+npx hono --help
 ```
 
-Follow the output. It explains every command (`routes`, `request`, `batch`, `snapshot`, `benchmark`, `optimize`, `ssg`), the JSON output contract, and the workflow.
+Follow the note at the top. It explains the JSON output contract and the workflow. `npx hono <command> --help` has examples and notes for each command (`routes`, `request`, `batch`, `snapshot`, `benchmark`, `optimize`, `ssg`).
 
 Notes:
 
-- `hono request` sends a request with `app.request()` — no server needed. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
-- For Cloudflare Workers bindings (KV, D1, R2, etc.), use `hono request /path --runtime workerd`. It starts the app with the wrangler config of the project, so the local bindings (`c.env`) are real. wrangler must be installed in the project.
+- `npx hono routes` lists the routes; `npx hono request /path` sends one request — no server needed. If the app is not at the default path (`src/index.ts`), pass the file to every command: `npx hono request / src/app.ts`. Do not pass credentials directly in CLI arguments; use environment variables for sensitive values.
+- In a project with a wrangler config, `c.env` carries the real local bindings (KV, D1, R2, vars) automatically — no server, no `--runtime` needed. For the full Workers runtime, add `--runtime workerd` (pass no file argument; the entry is `main` in the wrangler config).
 - For several requests, or a flow that keeps state (POST, then use the returned id), run them in one `hono batch -` call. One JSON object per line; `save` a value and use it as `{{id}}` in later steps. The steps share one app instance. Declare the expected status/body per step with `expect` (body is a deep partial match) and iterate until the summary shows `"failed": 0`:
 
   ```bash
@@ -214,13 +214,13 @@ app.get('/', (c) => c.render(<h1>Hello</h1>))
 c.req.param('id') // path parameter
 c.req.param() // all path params as object
 c.req.query('page') // query string parameter
-c.req.query() // all query params as object
+c.req.query() // all query params; values are string | undefined
 c.req.queries('tags') // multiple values: ?tags=A&tags=B → ['A', 'B']
 c.req.header('Authorization') // request header
 c.req.header() // all headers (keys are lowercase)
 
 // Body parsing
-await c.req.json() // parse JSON body
+await c.req.json<{ title: string }>() // parse JSON body (unknown without the type argument)
 await c.req.text() // parse text body
 await c.req.formData() // parse as FormData
 await c.req.parseBody() // parse multipart/form-data or urlencoded
@@ -560,7 +560,7 @@ import { createFactory } from 'hono/factory'
 import { html, raw } from 'hono/html'
 import { stream, streamText, streamSSE } from 'hono/streaming'
 import { testClient } from 'hono/testing'
-import { upgradeWebSocket } from 'hono/cloudflare-workers' // or other adapter
+import { upgradeWebSocket } from '@hono/cloudflare-workers' // or another @hono/<runtime> adapter package
 ```
 
 Available helpers: Accepts, Adapter, ConnInfo, Cookie, css, Dev, Factory, html, JWT, Proxy, Route, SSG, Streaming, Testing, WebSocket.
@@ -613,3 +613,5 @@ export default app
 import { serve } from '@hono/node-server'
 serve(app)
 ```
+
+Runtime-specific helpers (`serveStatic`, `upgradeWebSocket`, `getConnInfo`, Lambda handlers) live in separate packages since Hono v5: `@hono/cloudflare-workers`, `@hono/bun`, `@hono/deno`, `@hono/aws-lambda`, `@hono/lambda-edge`, `@hono/netlify`, `@hono/vercel`, `@hono/service-worker`. Install the one for the runtime and import from it; `hono/<runtime>` only exists on v4. `hono/adapter` (`env()`, `getRuntimeKey()`) stays in `hono`. Hono v5 is ESM only and needs Node.js 22.12 or later.
