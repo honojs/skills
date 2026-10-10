@@ -37,7 +37,7 @@ Build UI with `hono/jsx`: server-rendered pages with `jsxRenderer`, Vite with [v
 
 **Features:**
 
-- Project layout matching the `create-hono` `cloudflare-workers+vite` template
+- Project layout built on the `create-hono` `cloudflare-workers` template
 - Layouts, per-page head content, forms, client components, styling, streaming
 - `@hono/vite-dev-server` setup for other runtimes
 

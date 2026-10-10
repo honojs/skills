@@ -19,40 +19,51 @@ Build UI with `hono/jsx`: server-rendered HTML first, a small amount of client-s
 
 ## Project Layout (Cloudflare Workers + Vite)
 
-This is what `create-hono` generates with the `cloudflare-workers+vite` template. Match it in existing projects instead of inventing a different structure. Verify routes with the Hono CLI from the `hono` skill (`npx hono request /`); it is a dev dependency of the template and gives `c.env` the local bindings automatically.
+Start from what `create-hono` generates with the `cloudflare-workers` template (`npm create hono@next`, or `npx hono init --template cloudflare-workers` in an existing directory): `src/index.ts` with a text response, `cloudflare.config.ts` for the `cf` CLI, and a `vite.config.ts` with only `cloudflare()`. It has no JSX setup; add the pieces below, and match this layout in existing projects instead of inventing a different structure. Verify routes with the Hono CLI from the `hono` skill (`npx hono request /`); it is a dev dependency of the template and runs the app through Vite, so `c.env` has the local bindings automatically.
 
 ```
 src/
-  index.tsx      # Hono app, routes
+  index.tsx      # Hono app, routes (renamed from index.ts)
   renderer.tsx   # jsxRenderer layout: <html>, <head>, Vite assets
   client.ts      # optional: browser-side code
   style.css
 public/          # static files served as-is
+cloudflare.config.ts   # cf CLI: worker name, entrypoint, bindings
 vite.config.ts
-wrangler.jsonc
 ```
 
 ```jsonc
-// package.json (scripts)
+// package.json (scripts, from the template)
 {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "$npm_execpath run build && vite preview",
-  "deploy": "$npm_execpath run build && wrangler deploy",
-  "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  "dev": "cf dev",
+  "build": "cf build",
+  "deploy": "cf deploy",
+  "typecheck": "cf workers types && tsc"
 }
 ```
 
-```ts
-// vite.config.ts
-import { cloudflare } from '@cloudflare/vite-plugin'
-import { defineConfig } from 'vite'
-import ssrPlugin from 'vite-ssr-components/plugin'
+On top of the template:
 
-export default defineConfig({
-  plugins: [cloudflare(), ssrPlugin()],
-})
-```
+1. Rename `src/index.ts` to `src/index.tsx` and point the entrypoint import in `cloudflare.config.ts` at it:
+
+   ```ts
+   import * as entrypoint from './src/index.tsx' with { type: 'cf-worker' }
+   ```
+
+2. Install `vite-ssr-components` as a dev dependency and add its plugin:
+
+   ```ts
+   // vite.config.ts
+   import { cloudflare } from '@cloudflare/vite-plugin'
+   import { defineConfig } from 'vite'
+   import ssrPlugin from 'vite-ssr-components/plugin'
+
+   export default defineConfig({
+     plugins: [cloudflare(), ssrPlugin()],
+   })
+   ```
+
+3. Add `src/renderer.tsx`, `src/style.css`, and `public/`:
 
 ```tsx
 // src/renderer.tsx
@@ -78,7 +89,7 @@ export const renderer = jsxRenderer(({ children }) => {
 import { Hono } from 'hono'
 import { renderer } from './renderer'
 
-const app = new Hono<{ Bindings: CloudflareBindings }>()
+const app = new Hono<{ Bindings: Env }>()
 
 app.use(renderer)
 
@@ -91,7 +102,7 @@ export default app
 
 `vite-ssr-components` does the Vite plumbing: `<ViteClient />` injects the Vite client and SSR hot reload in dev and renders nothing in production; `<Script>` and `<Link>` point at source files and are rewritten to the hashed build output via the manifest. The plugin scans for them and adds each referenced file as a build entry, so there is no `rollupOptions.input` to maintain. Keep `<Script>` and `<Link>` as the component names, or configure the plugin's `components` option.
 
-Dev server is `npm run dev` (Vite with the Cloudflare plugin, so `c.env` bindings are real). Bindings types come from `npm run cf-typegen`; never hand-write them.
+`npm run dev` (`cf dev`) is for humans; verify with the Hono CLI instead. Bindings are declared in `cloudflare.config.ts`, and their `Env` type comes from `npm run typecheck`; never hand-write it. In an existing wrangler project, keep wrangler, `npm run cf-typegen`, and `CloudflareBindings` as described in the `hono` skill.
 
 ## Layouts and Pages
 
@@ -140,7 +151,7 @@ app.route('/blog', blog)
 import { useRequestContext } from 'hono/jsx-renderer'
 
 const UserMenu = async () => {
-  const c = useRequestContext<{ Bindings: CloudflareBindings }>()
+  const c = useRequestContext<{ Bindings: Env }>()
   const user = await c.env.KV.get('user')
   return <span>{user}</span>
 }
@@ -309,4 +320,4 @@ Fetch with `Accept: text/markdown` (see the `hono` skill):
 - Layout in `jsxRenderer`, pages via `c.render()`, per-page `<title>` inside the page.
 - Forms post to routes and redirect; client JavaScript only where needed, plain DOM first.
 - Vite assets go through `vite-ssr-components` (`ViteClient`, `Script`, `Link`), not hand-written `<script>` tags, on Cloudflare.
-- Bindings types from `npm run cf-typegen`.
+- Bindings types generated, never hand-written: `Env` from `npm run typecheck` (`cf`), `CloudflareBindings` from `npm run cf-typegen` (wrangler).
