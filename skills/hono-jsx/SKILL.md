@@ -19,7 +19,7 @@ Build UI with `hono/jsx`: server-rendered HTML first, a small amount of client-s
 
 ## Project Layout (Cloudflare Workers + Vite)
 
-Start from what `create-hono` generates with the `cloudflare-workers` template (`npm create hono@latest`, or `npx hono init --template cloudflare-workers` in an existing directory): `src/index.ts` with a text response, `cloudflare.config.ts` for the `cf` CLI, and a `vite.config.ts` with only `cloudflare()`. It has no JSX setup; add the pieces below, and match this layout in existing projects instead of inventing a different structure. Verify routes with the Hono CLI from the `hono` skill (`npx hono request /`); it is a dev dependency of the template and runs the app through Vite, so `c.env` has the local bindings automatically.
+Start from what `create-hono` generates with the `cloudflare-workers` template (`npm create hono@next`, or `npx hono init --template cloudflare-workers` in an existing directory): `src/index.ts` with a text response, `cloudflare.config.ts` for the `cf` CLI, and a `vite.config.ts` with only `cloudflare()`. It has no JSX setup; add the pieces below, and match this layout in existing projects instead of inventing a different structure. Verify routes with the Hono CLI from the `hono` skill (`npx hono request /`); it is a dev dependency of the template and runs the app through Vite, so `c.env` has the local bindings automatically.
 
 ```
 src/
