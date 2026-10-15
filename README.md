@@ -1,6 +1,6 @@
 # Hono Skills
 
-Agent Skills for developing applications with [Hono](https://hono.dev). Currently provides the `hono` and `hono-jsx` skills, with more skills for the Hono ecosystem planned.
+Agent Skills for developing applications with [Hono](https://hono.dev). Currently provides the `hono`, `hono-jsx`, and `hono-void` skills, with more skills for the Hono ecosystem planned.
 
 ## Installation
 
@@ -40,6 +40,10 @@ Build UI with `hono/jsx`: server-rendered pages with `jsxRenderer`, Vite with [v
 - Project layout built on the `create-hono` `cloudflare-workers` template
 - Layouts, per-page head content, forms, client components, styling, streaming
 - `@hono/vite-dev-server` setup for other runtimes
+
+### hono-void
+
+Check a [Void](https://void.cloud) app with Hono CLI: page data as JSON, page actions, validation errors, and resetting the local DB.
 
 ## Requirements
 

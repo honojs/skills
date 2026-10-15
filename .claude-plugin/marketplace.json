@@ -14,7 +14,7 @@
       "description": "Efficiently develop Hono applications with inline API reference, request testing, and hono/jsx UI guidance.",
       "source": "./",
       "strict": true,
-      "skills": ["./skills/hono", "./skills/hono-jsx"]
+      "skills": ["./skills/hono", "./skills/hono-jsx", "./skills/hono-void"]
     }
   ]
 }
