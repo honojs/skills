@@ -23,7 +23,7 @@ npx hono batch - <<'EOF'
 EOF
 ```
 
-An array in `expect` must match the whole array, so check one item of a list by reading the response, not with `expect`. The path, fields, and messages above are an example. Check yours with `npx hono routes` and one request first.
+A create that redirects shows its `location`; follow it with `"save":{"next":"header:location"}` and then `"path":"{{next}}"`. An array in `expect` must match the whole array, so check one item of a list by reading the response, not with `expect`. The path, fields, and messages above are an example. Check yours with `npx hono routes` and one request first.
 
 ## Checking a Void app
 
