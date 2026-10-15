@@ -1,0 +1,19 @@
+skills/hono-void/SKILL.md
+  s_ff5a9e503d08b8::t_cd6868bb0a6762 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "82869530866c7260e1b4df1968703fde84b6310a",
+  "prompts": {},
+  "sessions": {
+    "s_ff5a9e503d08b8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25def070-233f-4222-9fd0-a20b635e7e78",
+        "model": "unknown"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}
