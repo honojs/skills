@@ -10,7 +10,7 @@ description: Use when checking or testing a Void app with Hono CLI — pages, pa
 ```bash
 npm install -D @hono/cli@next
 npx hono --help
-npx hono routes
+npx hono routes --exclude /__void   # hide Void's internal routes
 npx hono request /
 ```
 
