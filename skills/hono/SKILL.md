@@ -1,6 +1,6 @@
 ---
 name: hono
-description: Use when building Hono web applications or when the user asks about Hono APIs, routing, middleware, JSX, validation, testing, or streaming. TRIGGER when code imports from 'hono' or 'hono/*', or user mentions Hono. Use Hono CLI to inspect and test the app.
+description: Use when building Hono web applications or when the user asks about Hono APIs, routing, middleware, JSX, validation, testing, or streaming. TRIGGER when code imports from 'hono' or 'hono/*', or user mentions Hono, or the project uses Void (a framework built on Hono). Use Hono CLI to inspect and test the app.
 ---
 
 # Hono Skill
@@ -47,6 +47,16 @@ Notes:
 
 - Before changing existing routes, capture the current behavior: `npx hono snapshot` prints it as batch JSONL lines (real responses become the `expect`). Keep the lines, make the change, then rerun them with `npx hono batch -` until `"failed": 0`.
 - On a large API, use `npx hono snapshot --status-only` and `npx hono batch - --compact` — same loop, much smaller output. A failed step carries `diff`: fix what it names.
+
+### Void
+
+[Void](https://void.cloud) builds a Hono app from file-based routes, so there is no entry file. Hono CLI runs it through Vite with no flag and no file argument. To check a Void app:
+
+- `pages/**` return HTML. Send the header `x-voidpages: true` to get the page data as JSON: `{ component, props, errors, head, ... }`.
+- Page actions are POST/PUT/PATCH/DELETE to the page URL. A named action has a `?name` suffix, e.g. `POST /ramen/1?delete`.
+- A validation failure in a page action returns 200, not 422, with the messages in `body.errors`. Assert on the body.
+- A foreign `Origin` header gets 403. Omit `Origin` or use the app's own origin.
+- `npx void db seed --yes` resets the local DB between runs.
 
 ---
 
