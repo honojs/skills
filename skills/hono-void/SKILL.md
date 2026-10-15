@@ -10,7 +10,7 @@ description: Use when checking or testing a Void app with Hono CLI — pages, pa
 ```bash
 npm install -D @hono/cli@next
 npx hono --help
-npx hono routes
+npx hono routes --exclude /__void   # hide Void's internal routes
 npx hono request /
 ```
 
@@ -23,7 +23,18 @@ npx hono batch - <<'EOF'
 EOF
 ```
 
-An array in `expect` must match the whole array, so check one item of a list by reading the response, not with `expect`. The path, fields, and messages above are an example. Check yours with `npx hono routes` and one request first.
+A create that redirects shows its `location`; follow it with `"save":{"next":"header:location"}` and then `"path":"{{next}}"`. An array in `expect` must match the whole array, so check one item of a list by reading the response, not with `expect`. The path, fields, and messages above are an example. Check yours with `npx hono routes` and one request first.
+
+## Checking the page in a browser
+
+HTTP requests do not run the page's JavaScript, so they miss client-side bugs: a form that keeps its values after a submit, or a redirect that lands on the wrong URL. Check those with `npx hono browse`. It loads the page in happy-dom, runs its JavaScript, and fills and clicks in order. Install happy-dom first:
+
+```bash
+npm install -D happy-dom
+npx hono browse / --fill "Shop name=Hono Ramen" --click 'button[type=submit]'
+```
+
+`--fill` takes a field's name, label text, or placeholder (the keys in `forms` of the output), or a CSS selector. The output has the final `url`, the visible `text`, the `forms` values, and `console` errors. happy-dom has no layout or CSS.
 
 ## Checking a Void app
 
