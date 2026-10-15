@@ -14,13 +14,22 @@ npx hono routes
 npx hono request /
 ```
 
-For a flow (create, then read), use one `npx hono batch -` call with `expect` per step. The `hono` skill has the details.
+For a flow (create, then read), use one `npx hono batch -` call with `expect` on every step. Send `x-voidpages: true` so a page answers with JSON instead of the full HTML. A page action returns 200 even when it fails, so assert on the body (`body` in `expect` is a deep partial match):
+
+```bash
+npx hono batch - <<'EOF'
+{"method":"POST","path":"/","headers":{"x-voidpages":"true"},"body":{"shop":""},"expect":{"status":200,"body":{"errors":{"shop":"Enter a shop name"}}}}
+{"method":"POST","path":"/","headers":{"x-voidpages":"true"},"body":{"shop":"Hono Ramen"},"expect":{"status":200}}
+EOF
+```
+
+An array in `expect` must match the whole array, so check one item of a list by reading the response, not with `expect`. The path, fields, and messages above are an example. Check yours with `npx hono routes` and one request first.
 
 ## Checking a Void app
 
 - `pages/**` return HTML. Send the header `x-voidpages: true` to get the page data as JSON: `{ component, props, errors, head, ... }`.
 - Page actions are POST/PUT/PATCH/DELETE to the page URL. A named action has a `?name` suffix, e.g. `POST /ramen/1?delete`.
-- A validation failure in a page action returns 200, not 422, with the messages in `body.errors`. Assert on the body.
+- A validation failure in a page action returns 200, not 422, with the messages in `body.errors` (`{ field: message }`). A success has no `errors`.
 - A foreign `Origin` header gets 403. Omit `Origin` or use the app's own origin.
 - `npx void db seed --yes` resets the local DB between runs.
 
